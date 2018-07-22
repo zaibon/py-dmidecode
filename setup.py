@@ -21,7 +21,7 @@ setup(
     # https://packaging.python.org/specifications/core-metadata/#name
     name='py-dmidecode',
 
-    version='0.0.1',
+    version='0.0.2',
 
     description='python lib that parse the output of dmidecode ',
 

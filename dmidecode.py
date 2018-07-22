@@ -129,8 +129,7 @@ def get_by_type(type_id):
 
 
 def _execute_cmd():
-    p = _subprocess.run("dmidecode", stdout=_subprocess.PIPE, stderr=_subprocess.PIPE, check=True)
-    return p.stdout
+    return _subprocess.check_output("dmidecode", stderr=_subprocess.PIPE)
 
 
 def _parse(buffer):
