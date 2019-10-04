@@ -1,19 +1,22 @@
-# Forked from https://github.com/zaibon/py-dmidecode/blob/master/dmidecode.py
-
-# flake8: noqa
-
 import re
+import subprocess
 
 
 class DMIParse:
-    def __init__(self, str):
-        data = self.dmidecode_parse(str)
+    """
+    dmidecode information parsing object
+    requires dmidecode output as input string
+    """
+
+    def __init__(self, str, default='n/a'):
+        self.default = default
+        self.data = self.dmidecode_parse(str)
 
     def get(self, type_id):
         if isinstance(type_id, str):
-            for type_num, type_str in DMIDecode.type2str.items():
-                 if type_str == type_id:
-                     type_id = type_num
+            for type_num, type_str in self.type2str.items():
+                if type_str == type_id:
+                    type_id = type_num
 
         result = list()
         for entry in self.data.values():
@@ -22,19 +25,33 @@ class DMIParse:
         return result
 
     def manufacturer(self):
-        return self.get('System')[0]['Manufacturer']
+        return self.get('System')[0].get('Manufacturer', self.default)
+
+    def model(self):
+        return self.get('System')[0].get('Product Name', self.default)
 
     def serial_number(self):
-        return self.get('System')[0]['Serial Number']
+        return self.get('System')[0].get('Serial Number', self.default)
 
     def cpu_type(self):
-        return self.get('Processor')[0]['Version']
+        cpu_version = self.default
+        for cpu in self.get('Processor'):
+            if cpu.get('Core Enabled'):
+                cpu_version = cpu.get('Version', self.default)
+        return cpu_version
 
     def cpu_num(self):
-        return len(self.get('Processor'))
+        cpus = 0
+        for cpu in self.get('Processor'):
+            if cpu.get('Core Enabled'):
+                cpus += 1
+        return cpus
 
-    def total_cores(self):
-        return self.cpu_num() * int(self.get('Processor')[0]['Core Count'])
+    def total_enabled_cores(self):
+        cores = 0
+        for cpu in self.get('Processor'):
+            cores += int(cpu.get('Core Enabled', 0))
+        return cores
 
     def total_ram(self):
         """Returns total memory in GB"""
@@ -42,9 +59,10 @@ class DMIParse:
                     self.get('Memory Device')])
 
     def firmware(self):
-        return self.get('BIOS')[0]['Firmware Revision']
+        return self.get('BIOS')[0].get('Firmware Revision', self.default)
 
-    handle_re = re.compile('^Handle\\s+(.+),\\s+DMI\\s+type\\s+(\\d+),\\s+(\\d+)\\s+bytes$')
+    handle_re = re.compile(
+        '^Handle\\s+(.+),\\s+DMI\\s+type\\s+(\\d+),\\s+(\\d+)\\s+bytes$')
     in_block_re = re.compile("^\\t\\t(.+)$")
     record_re = re.compile("\\t(.+):\\s+(.+)$")
     record2_re = re.compile("\\t(.+):$")
@@ -95,15 +113,16 @@ class DMIParse:
         42: 'Management Controller Host Interface'
     }
 
-    def dmidecode_parse(self, buffer):
-        self.data = {}
+    def dmidecode_parse(self, buffer):  # noqa: C901
+        data = {}
         #  Each record is separated by double newlines
         split_output = buffer.split('\n\n')
 
         for record in split_output:
             record_element = record.splitlines()
 
-            #  Entries with less than 3 lines are incomplete / inactive; skip them
+            #  Entries with less than 3 lines are incomplete / inactive
+            #  skip them
             if len(record_element) < 3:
                 continue
 
@@ -115,12 +134,12 @@ class DMIParse:
 
             dmi_handle = handle_data[0]
 
-            self.data[dmi_handle] = {}
-            self.data[dmi_handle]["DMIType"] = int(handle_data[1])
-            self.data[dmi_handle]["DMISize"] = int(handle_data[2])
+            data[dmi_handle] = {}
+            data[dmi_handle]["DMIType"] = int(handle_data[1])
+            data[dmi_handle]["DMISize"] = int(handle_data[2])
 
             #  Okay, we know 2nd line == name
-            self.data[dmi_handle]["DMIName"] = record_element[1]
+            data[dmi_handle]["DMIName"] = record_element[1]
 
             in_block_elemet = ""
             in_block_list = ""
@@ -132,7 +151,8 @@ class DMIParse:
                 #  Check whether we are inside a \t\t block
                 if in_block_elemet != "":
 
-                    in_block_data = DMIDecode.in_block_re.findall(record_element[1])
+                    in_block_data = DMIDecode.in_block_re.findall(
+                        record_element[1])
 
                     if in_block_data:
                         if not in_block_list:
@@ -141,7 +161,7 @@ class DMIParse:
                             in_block_list = in_block_list + "\t\t"
                             + in_block_data[0][1]
 
-                        self.data[dmi_handle][in_block_elemet] = in_block_list
+                        data[dmi_handle][in_block_elemet] = in_block_list
                         continue
                     else:
                         # We are out of the \t\t block; reset it again, and let
@@ -152,20 +172,21 @@ class DMIParse:
 
                 #  Is this the line containing handle identifier, type, size?
                 if record_data:
-                    self.data[dmi_handle][record_data[0][0]] = record_data[0][1]  # noq
+                    data[dmi_handle][record_data[0][0]] = record_data[0][1]
                     continue
 
                 #  Didn't findall regular entry, maybe an array of data?
                 record_data2 = DMIDecode.record2_re.findall(record_element[i])
 
                 if record_data2:
-                    #  This is an array of data - let the loop know we are inside
-                    #  an array block
+                    #  This is an array of data - let the loop know we are
+                    #  inside an array block
                     in_block_elemet = record_data2[0][0]
                     continue
+        return data
 
     def size_to_gb(self, str):
-        '''Convert dmidecode memory size description to GB'''
+        """Convert dmidecode memory size description to GB"""
         nb = re.search('[0-9]+', str)
         if nb:
             nb = int(re.search('[0-9]+', str).group())
@@ -177,3 +198,24 @@ class DMIParse:
             return nb
         else:
             return 0
+
+
+class DMIDecode(DMIParse):
+    """Wrapper over DMIParse which runs dmidecode locally"""
+
+    def __init__(self, command='dmidecode'):
+        self.dmidecode = command
+        raw = self._run()
+        super().__init__(raw)
+
+    def _run(self):
+        # let subprocess merge stderr with stdout
+        proc = subprocess.Popen(self.dmidecode, stderr=subprocess.STDOUT,
+                                stdout=subprocess.PIPE)
+        stdout, stderr = proc.communicate()
+        if proc.returncode > 0:
+            raise RuntimeError(
+                '{} failed with an error:\n{}'.format(self.dmidecode,
+                                                      stdout.decode()))
+        else:
+            return stdout.decode()
