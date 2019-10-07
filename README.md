@@ -7,9 +7,6 @@ Small tool that parses ouput of dmidecode command
 from dmidecode import DMIDecode
 import subprocess
 
-# run dmidecode and store its output
-raw = subprocess.check_output("dmidecode", stderr=_subprocess.PIPE)
-
 # create parsing instance by passing dmidecode output
 dmi = DMIDecode()
 
@@ -33,4 +30,4 @@ dmi = DMIParse(raw)
 Other information can be easily retrieved by analyzing dmi.data and module code.
 
 ## Possible limitations
-Tested with dmidecode versions 2.11 and 2.12 only
+Tested with dmidecode versions 2.11, 2.12 and 3.2
