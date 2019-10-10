@@ -21,9 +21,10 @@ setup(
     # specification here:
     # https://packaging.python.org/specifications/core-metadata/#name
     name="py-dmidecode",
-    version="0.0.2",
+    version="0.1.0",
     description="python lib that parse the output of dmidecode ",
     long_description=long_description,
+    long_description_content_type="text/markdown",
     url="https://github.com/zaibon/py-dmidecode",
     author="Christophe de Carvalho",  # Optional
     # author_email='',
