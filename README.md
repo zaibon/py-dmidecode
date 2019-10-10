@@ -1,14 +1,33 @@
 # py-dmidecode
 
-Small tool that parse the ouput of the dmidecode command
+Small tool that parses ouput of dmidecode command
 
 ## How to use
 ```python
-import dmidecode
+from dmidecode import DMIDecode
+import subprocess
 
-# parse the full output
-data = dmidecode.parse()
+# create parsing instance by passing dmidecode output
+dmi = DMIDecode()
 
-# request only a certain type
-data = dmidecode.get_by_type(1)
+# some of the pre-defined queries
+print('Manufacturer:\t', dmi.manufacturer())
+print('Model:\t\t', dmi.model())
+print('Firmware:\t', dmi.firmware())
+print('Serial number:\t', dmi.serial_number())
+print('Processor type:\t', dmi.cpu_type())
+print('Number of CPUs:\t', dmi.cpu_num())
+print('Cores count:\t', dmi.total_enabled_cores())
+print('Total RAM:\t{} GB'.format(dmi.total_ram()))
 ```
+
+Alternatively instead of running dmidecode locally you can use DMIParse by passing dmidecode output as an argument:
+```python
+from dmidecode import DMIParse
+dmi = DMIParse(raw)
+```
+
+Other information can be easily retrieved by analyzing dmi.data and module code.
+
+## Possible limitations
+Tested with dmidecode versions 2.11, 2.12 and 3.2
