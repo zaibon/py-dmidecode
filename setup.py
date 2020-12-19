@@ -17,18 +17,15 @@ with open(path.join(here, "README.md"), encoding="utf-8") as f:
     long_description = f.read()
 
 setup(
-    # There are some restrictions on what makes a valid project name
-    # specification here:
-    # https://packaging.python.org/specifications/core-metadata/#name
     name="py-dmidecode",
     version="0.1.0",
     description="python lib that parse the output of dmidecode ",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/zaibon/py-dmidecode",
-    author="Christophe de Carvalho",  # Optional
+    author="Christophe de Carvalho",
     # author_email='',
-    classifiers=[  # Optional
+    classifiers=[
         "Development Status :: 3 - Alpha",
         # Indicate who your project is intended for
         "Intended Audience :: Developers",
@@ -39,6 +36,9 @@ setup(
         "Programming Language :: Python :: 3.4",
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
     ],
     keywords="system development",
     py_modules=["dmidecode"],
