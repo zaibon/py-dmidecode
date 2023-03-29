@@ -18,7 +18,7 @@ with open(path.join(here, "README.md"), encoding="utf-8") as f:
 
 setup(
     name="py-dmidecode",
-    version="0.1.0",
+    version="0.1.1",
     description="python lib that parse the output of dmidecode ",
     long_description=long_description,
     long_description_content_type="text/markdown",

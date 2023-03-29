@@ -8,9 +8,9 @@ class DMIParse:
     requires dmidecode output as input string
     """
 
-    def __init__(self, str, default="n/a"):
+    def __init__(self, dmidecode_output, default="n/a"):
         self.default = default
-        self.data = self.dmidecode_parse(str)
+        self.data = self.dmidecode_parse(dmidecode_output)
 
     def get(self, type_id):
         if isinstance(type_id, str):
@@ -182,16 +182,16 @@ class DMIParse:
                     continue
         return data
 
-    def size_to_gb(self, str):
+    def size_to_gb(self, value):
         """Convert dmidecode memory size description to GB"""
-        nb = re.search("[0-9]+", str)
+        nb = re.search("[0-9]+", value)
         if nb:
-            nb = int(re.search("[0-9]+", str).group())
+            nb = int(re.search("[0-9]+", value).group())
         else:
             return 0
-        if "MB" in str:
+        if "MB" in value:
             return nb / 1024 if nb else 0
-        elif "GB" in str:
+        elif "GB" in value:
             return nb
         else:
             return 0
@@ -207,9 +207,9 @@ class DMIDecode(DMIParse):
 
     def _run(self):
         # let subprocess merge stderr with stdout
-        proc = subprocess.Popen(self.dmidecode, stderr=subprocess.STDOUT, stdout=subprocess.PIPE)
-        stdout, stderr = proc.communicate()
-        if proc.returncode > 0:
-            raise RuntimeError("{} failed with an error:\n{}".format(self.dmidecode, stdout.decode()))
-        else:
-            return stdout.decode()
+        with subprocess.Popen(self.dmidecode, stderr=subprocess.STDOUT, stdout=subprocess.PIPE) as proc:
+            stdout, _ = proc.communicate()
+            if proc.returncode > 0:
+                raise RuntimeError("{} failed with an error:\n{}".format(self.dmidecode, stdout.decode()))
+            else:
+                return stdout.decode()
