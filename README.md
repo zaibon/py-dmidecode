@@ -1,6 +1,6 @@
 # py-dmidecode
 
-Small tool that parses ouput of dmidecode command
+Small tool that parses output of dmidecode command
 
 ## How to use
 ```python
