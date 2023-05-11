@@ -1,8 +1,9 @@
 # py-dmidecode
 
-Small tool that parses ouput of dmidecode command
+Small tool that parses output of dmidecode command
 
 ## How to use
+
 ```python
 from dmidecode import DMIDecode
 import subprocess
@@ -22,6 +23,7 @@ print('Total RAM:\t{} GB'.format(dmi.total_ram()))
 ```
 
 Alternatively instead of running dmidecode locally you can use DMIParse by passing dmidecode output as an argument:
+
 ```python
 from dmidecode import DMIParse
 dmi = DMIParse(raw)
@@ -30,4 +32,5 @@ dmi = DMIParse(raw)
 Other information can be easily retrieved by analyzing dmi.data and module code.
 
 ## Possible limitations
+
 Tested with dmidecode versions 2.11, 2.12 and 3.2
