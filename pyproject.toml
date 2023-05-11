@@ -28,7 +28,11 @@ version = "0.1.0"
 "Bug Tracker" = "https://github.com/zaibon/py-dmidecode/issues"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.8"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.3.0"
+flake8 = "^6.0.0"
 
 [build-system]
 build-backend = "poetry.core.masonry.api"

@@ -148,7 +148,6 @@ class DMIParse:
                     break
                 #  Check whether we are inside a \t\t block
                 if in_block_elemet != "":
-
                     in_block_data = DMIDecode.in_block_re.findall(record_element[1])
 
                     if in_block_data:

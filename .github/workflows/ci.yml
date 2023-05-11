@@ -11,20 +11,25 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: 3.11
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
+        run: poetry install --no-interaction
       - name: Check format with black
         run: |
-          pip install black==20.8b1
-          black --check --line-length 127 -t py37 *.py
+          source .venv/bin/activate
+          black --check --line-length 127 -t py37 .
 
   lint:
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 3
+      max-parallel: 5
       matrix:
-        python-version: [3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 3.10, 3.11]
+        python-version: ["3.8", "3.9", "3.10", "3.11"]
 
     steps:
       - uses: actions/checkout@v1
@@ -32,13 +37,41 @@ jobs:
         uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
+        run: poetry install --no-interaction
       - name: Lint with flake8
         run: |
-          pip install flake8
+          source .venv/bin/activate
           # stop the build if there are Python syntax errors or undefined names
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
           # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 5
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11"]
+
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+      - name: Install dependencies
+        run: poetry install --no-interaction
+      - name: build
+        run: poetry build
