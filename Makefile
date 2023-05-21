@@ -18,7 +18,7 @@ format:
 fix:
 	black --line-length 127 .
 
-release: clean
+release: clean build
 	poetry publish
 
 clean:
