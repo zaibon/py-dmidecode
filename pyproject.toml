@@ -1,0 +1,35 @@
+[tool.poetry]
+authors = ["Christophe de Carvalho <christophe.dcpm@gmail.com>"]
+classifiers = [
+  "Development Status :: 3 - Alpha", # Indicate who your project is intended for
+  "Intended Audience :: Developers",
+  "Topic :: Software Development :: Libraries :: Python Modules", # Pick your license as you wish
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+]
+description = "python library to parse the output of dmidecode"
+homepage = "https://github.com/zaibon/py-dmidecode"
+keywords = ["system development"]
+name = "py-dmidecode"
+packages = [{include = "py_dmidecode"}]
+readme = "README.md"
+repository = "https://github.com/zaibon/py-dmidecode"
+version = "0.1.0"
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/zaibon/py-dmidecode/issues"
+
+[tool.poetry.dependencies]
+python = ">=3.8.1,<4.0"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.3.0"
+flake8 = "^6.0.0"
+
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core"]

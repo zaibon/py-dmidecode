@@ -1,23 +1,27 @@
 all: build install
 
 build:
-	python setup.py build
+	poetry build
 
 install:
-	python setup.py install
+	poetry install
 
-package: source_pkg bin_pkg
+lint: format
+	# stop the build if there are Python syntax errors or undefined names
+	flake8 py_dmidecode --count --select=E9,F63,F7,F82 --show-source --statistics
+	# exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+	flake8 py_dmidecode --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
-source_pkg:
-	python3 setup.py sdist
+format:
+	black --check --line-length 127 .
 
-bin_pkg:
-	python3 setup.py bdist_wheel
+fix:
+	black --line-length 127 .
 
-release: clean package
-	twine upload dist/*
+release: clean
+	poetry publish
 
 clean:
-	rm -fr build dist dmidecode.egg-info
+	rm -fr  dist
 
-.PHONY: all build install package source_pkg bin_pkg
+.PHONY: all build install lint fix release clean
