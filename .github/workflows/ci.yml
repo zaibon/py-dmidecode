@@ -3,27 +3,6 @@ name: CI
 on: [push]
 
 jobs:
-  format:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v1
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v1
-        with:
-          python-version: 3.11
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
-        with:
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-          installer-parallel: true
-      - name: Install dependencies
-        run: poetry install --no-interaction
-      - name: Check format with black
-        run: |
-          source .venv/bin/activate
-          black --check --line-length 127 -t py37 .
-
   lint:
     runs-on: ubuntu-latest
     strategy:
@@ -48,10 +27,7 @@ jobs:
       - name: Lint with flake8
         run: |
           source .venv/bin/activate
-          # stop the build if there are Python syntax errors or undefined names
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+          make lint
   build:
     runs-on: ubuntu-latest
     strategy:
