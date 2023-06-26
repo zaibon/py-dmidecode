@@ -6,7 +6,6 @@ Small tool that parses output of dmidecode command
 
 ```python
 from dmidecode import DMIDecode
-import subprocess
 
 # create parsing instance by passing dmidecode output
 dmi = DMIDecode()

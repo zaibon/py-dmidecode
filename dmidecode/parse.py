@@ -1,5 +1,4 @@
 import re
-import subprocess
 
 
 class DMIParse:
@@ -124,7 +123,7 @@ class DMIParse:
             if len(record_element) < 3:
                 continue
 
-            handle_data = DMIDecode.handle_re.findall(record_element[0])
+            handle_data = self.handle_re.findall(record_element[0])
 
             if not handle_data:
                 continue
@@ -148,7 +147,7 @@ class DMIParse:
                     break
                 #  Check whether we are inside a \t\t block
                 if in_block_elemet != "":
-                    in_block_data = DMIDecode.in_block_re.findall(record_element[1])
+                    in_block_data = self.in_block_re.findall(record_element[1])
 
                     if in_block_data:
                         if not in_block_list:
@@ -164,7 +163,7 @@ class DMIParse:
                         # the parsing continue
                         in_block_elemet = ""
 
-                record_data = DMIDecode.record_re.findall(record_element[i])
+                record_data = self.record_re.findall(record_element[i])
 
                 #  Is this the line containing handle identifier, type, size?
                 if record_data:
@@ -172,7 +171,7 @@ class DMIParse:
                     continue
 
                 #  Didn't findall regular entry, maybe an array of data?
-                record_data2 = DMIDecode.record2_re.findall(record_element[i])
+                record_data2 = self.record2_re.findall(record_element[i])
 
                 if record_data2:
                     #  This is an array of data - let the loop know we are
@@ -194,21 +193,3 @@ class DMIParse:
             return nb
         else:
             return 0
-
-
-class DMIDecode(DMIParse):
-    """Wrapper over DMIParse which runs dmidecode locally"""
-
-    def __init__(self, command="dmidecode"):
-        self.dmidecode = command
-        raw = self._run()
-        super().__init__(raw)
-
-    def _run(self):
-        # let subprocess merge stderr with stdout
-        with subprocess.Popen(self.dmidecode, stderr=subprocess.STDOUT, stdout=subprocess.PIPE) as proc:
-            stdout, _ = proc.communicate()
-            if proc.returncode > 0:
-                raise RuntimeError("{} failed with an error:\n{}".format(self.dmidecode, stdout.decode()))
-            else:
-                return stdout.decode()
