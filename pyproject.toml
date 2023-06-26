@@ -18,7 +18,7 @@ name = "py-dmidecode"
 packages = [{include = "dmidecode"}]
 readme = "README.md"
 repository = "https://github.com/zaibon/py-dmidecode"
-version = "0.1.1"
+version = "0.1.2"
 
 [tool.poetry.urls]
 "Bug Tracker" = "https://github.com/zaibon/py-dmidecode/issues"
