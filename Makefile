@@ -6,6 +6,12 @@ build:
 install:
 	poetry install
 
+test:
+	pytest --cov=dmidecode 
+
+test-ci:
+	pytest --cov=dmidecode --cov-report=xml
+
 lint: format
 	# stop the build if there are Python syntax errors or undefined names
 	flake8 dmidecode --count --select=E9,F63,F7,F82 --show-source --statistics
