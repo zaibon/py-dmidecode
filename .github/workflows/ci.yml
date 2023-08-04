@@ -3,7 +3,7 @@ name: CI
 on: [push]
 
 jobs:
-  lint:
+  test:
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 5
@@ -28,6 +28,15 @@ jobs:
         run: |
           source .venv/bin/activate
           make lint
+      - name: Run tests
+        run: |
+          source .venv/bin/activate
+          make test-ci
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
   build:
     runs-on: ubuntu-latest
     strategy:
