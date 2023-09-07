@@ -1,4 +1,5 @@
-# py-dmidecode [![codecov](https://codecov.io/gh/zaibon/py-dmidecode/branch/master/graph/badge.svg?token=uIHftzfsHn)](https://codecov.io/gh/zaibon/py-dmidecode)
+# py-dmidecode [![codecov](https://codecov.io/gh/zaibon/py-dmidecode/branch/master/graph/badge.svg?token=uIHftzfsHn)](https://codecov.io/gh/zaibon/py-dmidecode) [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/zaibon/py-dmidecode/badge)](https://securityscorecards.dev/viewer/?uri=github.com/zaibon/py-dmidecode)
+
 
 Small tool that parses output of dmidecode command
 
