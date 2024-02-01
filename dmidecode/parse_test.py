@@ -25,6 +25,10 @@ def test_parse(content: str):
                 "Runtime Size": "96 kB",
                 "ROM Size": "64 kB",
                 "BIOS Revision": "1.0",
+                "Characteristics": [
+                    "BIOS characteristics not supported",
+                    "Targeted content distribution is supported",
+                ],
             }
         ],
         1: [
@@ -52,6 +56,7 @@ def test_parse(content: str):
                 "Version": "Not Specified",
                 "Serial Number": "Board-GoogleCloud-8EBFB6FCE14327F972567743E80E23DE",
                 "Asset Tag": "8EBFB6FC-E143-27F9-7256-7743E80E23DE",
+                "Features": ["Board is a hosting board"],
                 "Location In Chassis": "Not Specified",
                 "Chassis Handle": "0x0099",
                 "Type": "Motherboard",
@@ -237,7 +242,14 @@ def test_parse(content: str):
                 "Partition Row Position": "1",
             },
         ],
-        32: [{"DMIType": 32, "DMISize": 11, "DMIName": "System Boot Information", "Status": "No errors detected"}],
+        32: [
+            {
+                "DMIType": 32,
+                "DMISize": 11,
+                "DMIName": "System Boot Information",
+                "Status": "No errors detected",
+            }
+        ],
     }
     p = DMIParse(content)
     for num, exp in expected.items():

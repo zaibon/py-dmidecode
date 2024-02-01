@@ -147,16 +147,16 @@ class DMIParse:
                     break
                 #  Check whether we are inside a \t\t block
                 if in_block_elemet != "":
-                    in_block_data = self.in_block_re.findall(record_element[1])
+                    in_block_data = self.in_block_re.findall(record_element[i])
 
                     if in_block_data:
                         if not in_block_list:
-                            in_block_list = in_block_data[0][0]
+                            in_block_list = [in_block_data[0]]
                         else:
-                            in_block_list = in_block_list + "\t\t"
-                            +in_block_data[0][1]
+                            in_block_list.append(in_block_data[0])
 
                         data[dmi_handle][in_block_elemet] = in_block_list
+
                         continue
                     else:
                         # We are out of the \t\t block; reset it again, and let
@@ -176,7 +176,7 @@ class DMIParse:
                 if record_data2:
                     #  This is an array of data - let the loop know we are
                     #  inside an array block
-                    in_block_elemet = record_data2[0][0]
+                    in_block_elemet = record_data2[0]
                     continue
         return data
 
