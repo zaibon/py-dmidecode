@@ -1,31 +1,28 @@
 all: build install
 
 build:
-	poetry build
-
-install:
-	poetry install
+	uv build
 
 test:
-	pytest --cov=dmidecode 
+	uv run pytest --cov=dmidecode
 
 test-ci:
-	pytest --cov=dmidecode --cov-report=xml
+	uv run pytest --cov=dmidecode --cov-report=xml
 
 lint: format
 	# stop the build if there are Python syntax errors or undefined names
-	flake8 dmidecode --count --select=E9,F63,F7,F82 --show-source --statistics
+	uv run flake8 dmidecode --count --select=E9,F63,F7,F82 --show-source --statistics
 	# exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-	flake8 dmidecode --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+	uv run flake8 dmidecode --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
 format:
-	black --check --line-length 127 .
+	uv run black --check --line-length 127 .
 
 fix:
-	black --line-length 127 .
+	uv run black --line-length 127 .
 
 release: clean build
-	poetry publish
+	uv publish
 
 clean:
 	rm -fr  dist
