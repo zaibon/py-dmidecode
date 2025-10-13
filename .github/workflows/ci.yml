@@ -17,7 +17,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install a specific version of uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v7
         with:
           version: "0.6.6"
       - name: Lint with flake8
@@ -43,6 +43,6 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install a specific version of uv
-        uses: astral-sh/setup-uv@v6
+        uses: astral-sh/setup-uv@v7
       - name: build
         run: make build
