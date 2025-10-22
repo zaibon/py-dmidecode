@@ -10,9 +10,9 @@ on:
   # To guarantee Maintained check is occasionally updated. See
   # https://github.com/ossf/scorecard/blob/main/docs/checks.md#maintained
   schedule:
-    - cron: '16 14 * * 2'
+    - cron: "16 14 * * 2"
   push:
-    branches: [ "master" ]
+    branches: ["master"]
 
 # Declare default permissions as read only.
 permissions: read-all
@@ -41,7 +41,7 @@ jobs:
         with:
           results_file: results.sarif
           results_format: sarif
-          repo_token: ${{ secrets.SCORECARD_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
 
           # Public repositories:
           #   - Publish results to OpenSSF REST API for easy access by consumers
